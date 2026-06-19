@@ -31,8 +31,13 @@ scripts/install.sh claude --copy     # self-contained copy (dereferences the spe
 
 As a plugin: the repo's root `.claude-plugin/marketplace.json` points its plugin `source` at
 `./integrations/claude`, so `/plugin marketplace add devangchhajed/journey-graph` then
-`/plugin install journey-graph@journey-graph-marketplace` works. Ad-hoc:
-`claude --plugin-dir integrations/claude`.
+`/plugin install journey-graph@journey-graph-marketplace` works. On a published-marketplace
+install the `references` symlink is **dereferenced** and the `spec/` content is copied into
+the plugin cache, so the skill is self-contained.
+
+> Note: `claude --plugin-dir integrations/claude` does **not** work for this repo — local
+> `--plugin-dir` installs skip symlinks that point outside the plugin directory, so the
+> skill wouldn't find `spec/`. For local development use `scripts/install.sh claude` instead.
 
 ---
 

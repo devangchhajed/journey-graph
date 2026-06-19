@@ -85,7 +85,11 @@ git clone https://github.com/devangchhajed/journey-graph.git ~/journey-graph
 # then run /reload-plugins in Claude Code
 ```
 
-(Ad-hoc, no install: `claude --plugin-dir ~/journey-graph/integrations/claude`.)
+(For local dev without publishing, use `scripts/install.sh claude` above — it symlinks the
+whole skill so the shared `spec/` resolves. Avoid `claude --plugin-dir integrations/claude`
+for this repo: local `--plugin-dir` installs skip symlinks that point outside the plugin
+dir, so the skill wouldn't find `spec/`. A published marketplace install is unaffected —
+it dereferences the symlink and copies the spec into the plugin cache.)
 
 ### Cursor
 
