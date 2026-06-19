@@ -1,0 +1,17 @@
+{
+  "name": "journey-graph-marketplace",
+  "owner": {
+    "name": "Devang Chhajed",
+    "url": "https://github.com/devangchhajed"
+  },
+  "metadata": {
+    "description": "Journey Graph — build, read, extend, and query self-describing JSON maps of any workflow (states, actions on elements, branches, paths)."
+  },
+  "plugins": [
+    {
+      "name": "journey-graph",
+      "source": "./integrations/claude",
+      "description": "Build, read, extend, and query journey graphs — self-describing JSON maps of any workflow."
+    }
+  ]
+}
