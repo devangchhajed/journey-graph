@@ -29,7 +29,7 @@ A journey graph is one JSON object:
   "schemaVersion": "1.0",
   "kind": "journey-graph",
   "legend": "Nodes are states; edges are actions on elements; a path is one journey.",
-  "specRef": "https://github.com/<owner>/journey-graph/blob/main/spec/SPEC.md",
+  "specRef": "https://github.com/devangchhajed/journey-graph/blob/main/spec/SPEC.md",
 
   "graph":    { ... },   // identity + provenance of this journey
   "nodes":    [ ... ],   // the states

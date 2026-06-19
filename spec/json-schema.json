@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/journey-graph/journey-graph/schema/v1",
+  "$id": "https://github.com/devangchhajed/journey-graph/schema/v1",
   "title": "Journey Graph v1",
   "description": "Tool-neutral, LLM-agnostic graph of a journey: nodes (states), edges (actions on elements), branches (divergences), paths (named traversals). See SPEC.md.",
   "type": "object",

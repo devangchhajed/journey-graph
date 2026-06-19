@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "kind": "journey-graph",
   "legend": "Nodes are states; edges are actions on elements; a path is one journey. See SPEC.md.",
-  "specRef": "https://github.com/journey-graph/journey-graph/blob/main/spec/SPEC.md",
+  "specRef": "https://github.com/devangchhajed/journey-graph/blob/main/spec/SPEC.md",
   "graph": {
     "id": "contacts/create-via-api",
     "title": "Create a contact via the REST API",

@@ -30,7 +30,7 @@ scripts/install.sh claude --copy     # self-contained copy (dereferences the spe
 ```
 
 As a plugin: the repo's root `.claude-plugin/marketplace.json` points its plugin `source` at
-`./integrations/claude`, so `/plugin marketplace add <owner>/journey-graph` then
+`./integrations/claude`, so `/plugin marketplace add devangchhajed/journey-graph` then
 `/plugin install journey-graph@journey-graph-marketplace` works. Ad-hoc:
 `claude --plugin-dir integrations/claude`.
 

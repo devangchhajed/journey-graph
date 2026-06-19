@@ -72,7 +72,7 @@ just drops that tool's adapter (all delegate to the same `spec/`). See
 As a plugin (the repo is its own self-referential marketplace):
 
 ```text
-/plugin marketplace add <owner>/journey-graph
+/plugin marketplace add devangchhajed/journey-graph
 /plugin install journey-graph@journey-graph-marketplace
 /reload-plugins
 ```
@@ -80,7 +80,7 @@ As a plugin (the repo is its own self-referential marketplace):
 Or as a standalone skill via git clone:
 
 ```bash
-git clone https://github.com/<owner>/journey-graph.git ~/journey-graph
+git clone https://github.com/devangchhajed/journey-graph.git ~/journey-graph
 ~/journey-graph/scripts/install.sh claude   # symlinks the skill into ~/.claude/skills/
 # then run /reload-plugins in Claude Code
 ```
