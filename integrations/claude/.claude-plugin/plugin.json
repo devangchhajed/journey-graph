@@ -1,0 +1,9 @@
+{
+  "name": "journey-graph",
+  "displayName": "Journey Graph",
+  "version": "1.0.0",
+  "description": "Build, read, extend, and query journey graphs — self-describing JSON maps of any workflow as states, actions on elements, branches, and named paths. Lets any LLM understand a flow without re-reading docs and add branches without re-deriving it.",
+  "keywords": ["journey", "graph", "workflow", "flow-map", "testing", "llm"],
+  "license": "MIT",
+  "repository": "https://github.com/devangchhajed/journey-graph"
+}

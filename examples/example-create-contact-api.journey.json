@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "journey-graph",
+  "legend": "Nodes are states; edges are actions on elements; a path is one journey. See SPEC.md.",
+  "specRef": "https://github.com/journey-graph/journey-graph/blob/main/spec/SPEC.md",
+  "graph": {
+    "id": "contacts/create-via-api",
+    "title": "Create a contact via the REST API",
+    "domain": "api",
+    "description": "A client creates a contact by POSTing to the API, optionally including an email, and reads it back. Shows that journeys are not UI-only: nodes are resource states, elements are request fields, the verb is 'call'.",
+    "roles": ["api-client"],
+    "entry": "POST /v1/contacts",
+    "context": {
+      "sources": [
+        { "type": "doc", "ref": "openapi.yaml#/paths/~1v1~1contacts", "readAt": "2026-06-19" }
+      ],
+      "notes": "Demonstrates the api domain. element.ref values are request field/param names."
+    },
+    "extensions": {}
+  },
+  "nodes": [
+    {
+      "id": "n_new_request",
+      "type": "start",
+      "name": "Compose create request",
+      "locator": "POST /v1/contacts",
+      "elements": [
+        { "ref": "name", "kind": "field", "note": "contact name (required)" },
+        { "ref": "email", "kind": "field", "note": "optional email address" }
+      ]
+    },
+    {
+      "id": "n_created",
+      "type": "state",
+      "name": "Contact created (201)",
+      "locator": "201 Created",
+      "elements": [
+        { "ref": "contact_id", "kind": "field", "note": "id of the created contact" }
+      ]
+    },
+    {
+      "id": "n_with_email",
+      "type": "terminal",
+      "name": "Contact created with email"
+    },
+    {
+      "id": "n_without_email",
+      "type": "terminal",
+      "name": "Contact created, no email"
+    },
+    {
+      "id": "n_rejected",
+      "type": "terminal",
+      "name": "Rejected (422)",
+      "locator": "422 Unprocessable Entity"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_post_with_email",
+      "from": "n_new_request",
+      "to": "n_created",
+      "action": { "verb": "call", "target": "name", "input": "{ \"name\": \"Ada Lovelace\", \"email\": \"ada@example.com\" }" },
+      "label": "POST a valid contact that includes an email",
+      "guards": ["name is non-empty"],
+      "branchOf": "n_new_request"
+    },
+    {
+      "id": "e_post_without_email",
+      "from": "n_new_request",
+      "to": "n_created",
+      "action": { "verb": "call", "target": "name", "input": "{ \"name\": \"Ada Lovelace\" }" },
+      "label": "POST a valid contact with no email",
+      "guards": ["name is non-empty"],
+      "branchOf": "n_new_request"
+    },
+    {
+      "id": "e_post_invalid",
+      "from": "n_new_request",
+      "to": "n_rejected",
+      "action": { "verb": "call", "target": "name", "input": "{ \"name\": \"\" }" },
+      "label": "POST with an empty name",
+      "guards": ["name is empty"],
+      "branchOf": "n_new_request"
+    },
+    {
+      "id": "e_read_with_email",
+      "from": "n_created",
+      "to": "n_with_email",
+      "action": { "verb": "call", "target": "contact_id", "input": "GET /v1/contacts/{contact_id}" },
+      "label": "Read back the created contact (email present)"
+    },
+    {
+      "id": "e_read_without_email",
+      "from": "n_created",
+      "to": "n_without_email",
+      "action": { "verb": "call", "target": "contact_id", "input": "GET /v1/contacts/{contact_id}" },
+      "label": "Read back the created contact (email absent)"
+    }
+  ],
+  "branches": [
+    {
+      "at": "n_new_request",
+      "question": "Is the request valid, and is an email supplied?",
+      "variants": [
+        { "key": "valid-with-email", "edge": "e_post_with_email", "covered": true, "ref": "p_create_with_email" },
+        { "key": "valid-no-email", "edge": "e_post_without_email", "covered": false, "ref": null },
+        { "key": "invalid-empty-name", "edge": "e_post_invalid", "covered": false, "ref": null }
+      ]
+    }
+  ],
+  "paths": [
+    {
+      "id": "p_create_with_email",
+      "title": "Create a contact with an email, then read it back",
+      "nodes": ["n_new_request", "n_created", "n_with_email"],
+      "edges": ["e_post_with_email", "e_read_with_email"],
+      "outcome": "Contact exists with the given email"
+    }
+  ]
+}

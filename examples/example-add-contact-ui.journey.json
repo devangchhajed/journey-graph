@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "journey-graph",
+  "legend": "Nodes are states; edges are actions on elements; a path is one journey. See SPEC.md.",
+  "specRef": "https://github.com/journey-graph/journey-graph/blob/main/spec/SPEC.md",
+  "graph": {
+    "id": "contacts/add-contact",
+    "title": "Add a contact",
+    "domain": "ui",
+    "description": "A user opens the contacts list, fills in the new-contact form, and saves. Shows a UI journey with a validation branch and a known-but-unmodelled duplicate-email variant.",
+    "roles": ["user"],
+    "entry": "/contacts",
+    "context": {
+      "sources": [
+        { "type": "doc", "ref": "docs/contacts/add.md", "readAt": "2026-06-19" },
+        { "type": "live", "ref": "walked the new-contact form", "readAt": "2026-06-19" }
+      ],
+      "notes": "Only name is required; email/phone are optional. Duplicate-email handling is known from docs but not yet modelled."
+    },
+    "extensions": {}
+  },
+  "nodes": [
+    {
+      "id": "n_contacts",
+      "type": "start",
+      "name": "Contacts list",
+      "locator": "/contacts",
+      "elements": [
+        { "ref": "search-input", "kind": "input", "note": "filter contacts" },
+        { "ref": "new-contact-button", "kind": "button", "note": "open the new-contact form" }
+      ]
+    },
+    {
+      "id": "n_new_form",
+      "type": "state",
+      "name": "New contact form",
+      "locator": "/contacts/new",
+      "elements": [
+        { "ref": "name-input", "kind": "input", "note": "full name (required)" },
+        { "ref": "email-input", "kind": "input", "note": "email address (optional)" },
+        { "ref": "phone-input", "kind": "input", "note": "phone number (optional)" },
+        { "ref": "save-button", "kind": "button", "note": "save the contact" }
+      ]
+    },
+    {
+      "id": "n_saved",
+      "type": "terminal",
+      "name": "Contact saved",
+      "locator": "/contacts"
+    },
+    {
+      "id": "n_form_error",
+      "type": "terminal",
+      "name": "Rejected (missing name)",
+      "locator": "/contacts/new"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_open_form",
+      "from": "n_contacts",
+      "to": "n_new_form",
+      "action": { "verb": "click", "target": "new-contact-button" },
+      "label": "Open the new-contact form"
+    },
+    {
+      "id": "e_save_valid",
+      "from": "n_new_form",
+      "to": "n_saved",
+      "action": { "verb": "click", "target": "save-button" },
+      "label": "Save a contact with a name",
+      "guards": ["name is non-empty"],
+      "branchOf": "n_new_form"
+    },
+    {
+      "id": "e_save_invalid",
+      "from": "n_new_form",
+      "to": "n_form_error",
+      "action": { "verb": "click", "target": "save-button" },
+      "label": "Try to save with an empty name",
+      "guards": ["name is empty"],
+      "branchOf": "n_new_form"
+    }
+  ],
+  "branches": [
+    {
+      "at": "n_new_form",
+      "question": "Is the contact valid?",
+      "variants": [
+        { "key": "valid", "edge": "e_save_valid", "covered": true, "ref": "p_add_contact_happy" },
+        { "key": "missing-name", "edge": "e_save_invalid", "covered": true, "ref": "p_add_contact_rejected" },
+        { "key": "duplicate-email", "edge": null, "covered": false, "ref": "known from docs/contacts/add.md; not yet modelled" }
+      ]
+    }
+  ],
+  "paths": [
+    {
+      "id": "p_add_contact_happy",
+      "title": "Add a valid contact",
+      "nodes": ["n_contacts", "n_new_form", "n_saved"],
+      "outcome": "Contact appears in the list"
+    },
+    {
+      "id": "p_add_contact_rejected",
+      "title": "Add rejected for a missing name",
+      "nodes": ["n_contacts", "n_new_form", "n_form_error"],
+      "outcome": "Stays on the form with a validation error"
+    }
+  ]
+}
